@@ -16,12 +16,14 @@ class dlinkl
     node *last;
     node *loc;
     int length;
+    int pos;
     dlinkl()
     {
         start=NULL;
         last=NULL;
         loc=NULL;
         length= 0;
+        pos=0;
     }
     bool isEmpty()
     {
@@ -29,22 +31,56 @@ class dlinkl
     }
     void search(int value)
     {
+        pos=1;
         if(!isEmpty())
         {
             loc=start;
-            while(loc->next!=NULL && loc->data<value)
+            while(loc!=last && loc->data<value)
             {
                 loc=loc->next;
+                pos++;
+        
             }
-            if(loc->next!=NULL && loc->data!=value)
+            
+            if(loc->data!=value)
             {
                 loc->next=NULL;
                 cout<<"Value does not exist"<<endl;
+                return;
             }
+            
+
             
         }
     }
     void InsertSorted(int value)
+    {
+        if(isEmpty())
+        {
+            InsertAtFront(value);
+        }
+        else if(!isEmpty())
+        {
+            search(value);
+            if(loc->next==NULL)
+            {
+                
+                if(loc==start&&loc->data>value)
+                {
+                    InsertAtFront(value);
+                }
+                else
+                {
+                    Insertion(value);
+                }
+                length++;
+            }
+            
+
+    
+        }   
+    }
+    void InsertAtFront(int value)
     {
         if(isEmpty())
         {
@@ -53,29 +89,39 @@ class dlinkl
             newnode->prev=NULL;
             newnode->next=NULL;
             start=newnode;
-            last=newnode;
+            last=start;
+            length=1;
+            return;
         }
-        else
+        if(!isEmpty())
         {
-            search(value);
-            if(loc->next=NULL)
-            {
-                node *newnode= new node;
-                newnode->data=value;
-                newnode->next=loc;
-                newnode->prev=loc->prev;
-                loc->next=newnode;
-                if(newnode->next==NULL)
-                {
-                    last=newnode;
-                }
-                length++;
+            node *newnode=new node;
+            newnode->data=value;
+            newnode->prev=NULL;
+            start->prev=newnode;
+            newnode->next=start;
+            start=newnode;
+            return;
+        }
+    }
+    void Insertion(int value)
+    {
+        node *newnode= new node;
+        newnode->data=value;
+        if(loc->data<value && loc!=NULL)
+        {
+             newnode->next=loc;
+            newnode->prev=loc->prev->next;
+            loc->prev->next=newnode;
+            loc->prev=newnode;
 
-            }
-            else if(loc->next!=NULL)
-            {
-                cout<<"Duplication not allowed"<<endl;
-            }
+        }
+        else if(last->data<value)
+        {
+            newnode->prev=last;
+            newnode->next=NULL;
+            last->next=newnode;
+            last=newnode;
         }
     }
     void DeleteVal(int val)
