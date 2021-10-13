@@ -163,9 +163,16 @@ class list
             printReverse(nextn->next);
         }
         cout<<"Data "<<nextn->data;
+        cout<<"\n"<<endl;
     }
     void ReverseOrder(node *begin)
      {
+        bool funct=false;
+        if(begin==start)
+        {loc=start;
+        funct=true;
+        }
+        else
         loc = begin->next;
         ploc = NULL, nloc = NULL;
  
@@ -175,7 +182,10 @@ class list
             ploc= loc;
             loc = nloc;
         }
+        if(funct==false)
         begin->next = ploc;
+        else
+        start=ploc;
     }
     void DeleteOdd()
     {
@@ -290,31 +300,31 @@ class list
         ReverseOrder(oldlast);
     }
     void switchVals(int value1, int value2)
-    {   loc=start;
-        ploc=NULL;
+    { 
         if(value1==value2)
         {
             cout<<"No Need to swap"<<endl;
             return;
         }
-        Search(value1);
-        if(loc==NULL)
+        node *plocv1=NULL;
+        node *locv1=start;
+        while(locv1 && locv1->data!=value1)
         {
-            cout<<"Value does not exist"<<endl;
-            return;
-        }
-        node *plocv1=ploc;
-        node *locv1=loc;
-        loc=start;
-        ploc=NULL;
-        Search(value2);
-        if(loc==NULL)
-        {
-            cout<<"Second value does not exist"<<endl;
-            return;
+            plocv1=locv1;
+            locv1=locv1->next;
         }
         node *plocv2=ploc;
-        node *locv2=loc;
+        node *locv2=start;
+        while(locv2&&locv2->data!=value2)
+        {
+            plocv2=locv2;
+            locv2=locv2->next;
+        }
+        if(locv1==NULL ||locv2==NULL)
+        {
+            cout<<"One of the values doesn't exist"<<endl;
+            return;
+        }
         if(plocv1!=NULL)
         {
             plocv1->next=locv2;
@@ -339,11 +349,17 @@ int main()
     list l;
     while(dec!='Q'&&dec!='q')
     {
-    node *newNode=new node;
+    node *newNode=l.start;
     cout<<"Press A to insert a value in a sorted manner"<<endl;
     cout<<"Press B to delete a value which will be searched"<<endl;
-    cout<<"Press C to print the list"<<endl;
+    cout<<"Press P to print the list"<<endl;
+    cout<<"Press C to interchange two values"<<endl;
+    cout<<"Press S to form two subsets of odd and even"<<endl;
+    cout<<"Press G to group odd and even values"<<endl;
     cout<<"Press D to destroy the list"<<endl;
+    cout<<"Press R to reverse the order"<<endl;
+    cout<<"Press U to print in reverse"<<endl;
+    cout<<"Press O to delete odd nodes"<<endl;
     cout<<"Press Q to quit "<<endl;
     cin>>dec;
     switch(toupper(dec))
@@ -351,8 +367,8 @@ int main()
         case 'A':
         cout<<"Insert the value"<<endl;
         cin>>ins;
-        newNode=l.start;
         l.InsertValue(ins);
+        //newNode=l.start;
         break;
         case 'B':
         cout<<"Insert value for deletion"<<endl;
@@ -366,6 +382,9 @@ int main()
         case 'D':
         cout<<"The list is destroyed"<<endl;
         l.destroyList();
+        break;
+        case 'U':
+        l.printReverse(newNode);
         break;
         case 'R':
         l.ReverseOrder(newNode);

@@ -53,11 +53,6 @@ class list
             loc=loc->next;
             cout<<"Fuck"<<endl;
         }
-        /*if(isEmpty())
-        {
-        cout<<"List is empty"<<endl;
-        return;
-        }*/
         if(loc!=NULL && loc->data!=value)
         {
         loc=NULL;

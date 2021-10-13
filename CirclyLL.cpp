@@ -1,32 +1,32 @@
 #include<iostream>
 using namespace std;
 
-class node
+class node//class of node
 {
     public:
     int data;
     node* next;
 };
 
-class CirclyLL
+class CirclyLL//class of list
 {
     public:
     node *list;
     int length;
     node *loc;
     node *ploc;
-    CirclyLL()
+    CirclyLL()//constructor
     {
         list=NULL;
         loc=NULL;
         ploc=NULL;
         length=0;
     }
-    bool isEmpty()
+    bool isEmpty()//checking if list is empty
     {
         return list==NULL;
     }
-    void PrintList()
+    void PrintList()//function to print list
     {
         int i=1;
         if(isEmpty())
@@ -44,21 +44,10 @@ class CirclyLL
             }while(temp!=list->next);
         }
     }
-    void Search(int value)
+    void Search(int value)//search function
     {
-        if(!isEmpty())
+        if(!isEmpty())//only search if list isn't empty
         {
-        // do
-        // {
-        //     if(loc->data != value && loc->next != NULL) 
-        //     {
-        //         loc = loc->next;
-        //     }
-        //     else if(loc==list->next&&value!=loc->data)
-        //     {
-        //         loc=NULL;
-        //     }
-        // } while (ploc!=list);
             loc = list->next;
             ploc = NULL;
             do
@@ -75,20 +64,20 @@ class CirclyLL
         }
 
     }
-    void InsertSorted(int value)
+    void InsertSorted(int value)//function for sorting input into list
     {
-        if(!isEmpty())
+        if(!isEmpty())//only search if not empty
         {
             Search(value);
             if(loc==NULL)
             {
               
-                if(loc==list->next)
+                if(loc==list->next)//insert at front if loc is back in original position
                 {
                     insert_at_front(value);
 
                 }
-                else
+                else//else insert in mid
                 {
                     insert_mid(value);
                 }
@@ -100,24 +89,24 @@ class CirclyLL
                 cout<<"Repetition not allowed"<<endl;
             }
         }
-        else 
+        else //if list is empty, insert directly
         insert_at_front(value);
     }
-    void insert_mid(int value)
+    void insert_mid(int value)//function for insertion at mid
     {
         node *newnode= new node;
         newnode->data=value;
         newnode->next=ploc->next;
         ploc->next = newnode;    
-        if (ploc==list)
+        if (ploc==list)//if insertion is at last or list pointer
         {
             list=newnode;
         }
         length++;
     }
-    void insert_at_front(int value)
+    void insert_at_front(int value)//insertion at first, or after the list pointer
     {
-        if(!isEmpty())
+        if(!isEmpty())//if list is empty
         {
         node *newnode= new node;
         newnode->data=value;
@@ -125,7 +114,7 @@ class CirclyLL
         ploc->next=newnode;
 
         }
-        else if(isEmpty())
+        else if(isEmpty())//if not empty
         {
             node *newnode = new node;
             newnode->data = value;
@@ -136,7 +125,7 @@ class CirclyLL
         }
         length++;
     }
-    void delete_node(int value)
+    void delete_node(int value)//deletion
     {
         if(!isEmpty())
         {
@@ -144,21 +133,21 @@ class CirclyLL
             if(loc!=NULL)
             {
                 cout<<"Value found"<<endl;
-                if(loc==ploc)
+                if(loc==ploc)//if only one value
                 {
                     delete list;
                     list=NULL;
                 }
                 else
                 {
-                    if(loc==list)
+                    if(loc==list)//if deletion at list pointer
                     {
                         ploc->next=list->next;
                         delete loc;
                         loc=ploc->next;
                         list=ploc;
                     }
-                    else
+                    else//if at any other location
                     {
                         ploc->next=loc->next;
                         delete loc;
@@ -173,7 +162,7 @@ class CirclyLL
             }
         }
     }
-    void destrolist()
+    void destrolist()//destruction of list function
     {
         if(!isEmpty())
         {
