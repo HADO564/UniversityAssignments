@@ -48,7 +48,6 @@ public:
 		}
 		delete[] current;
 		current = narr;
-		cout << "Shrinking complete" << endl;
 	}
 	int pop()
 	{
