@@ -1,5 +1,6 @@
 #include<iostream>
 #include<string.h>
+#include<cmath>
 using namespace std;
 
 class DAStack
@@ -47,7 +48,7 @@ public:
 			narr[i] = current[i];
 		}
 		delete[] current;
-		current = narr;
+		current = narr; 
 	}
 	int pop()
 	{
@@ -64,7 +65,7 @@ public:
 			cout << "Array is empty" << endl;
 		return -10;
 	}
-	void Peak()
+	void Peak()//displays the top variable
 	{
 		if (!isEmpty())
 		{
@@ -73,14 +74,14 @@ public:
 		else
 			cout << "Array is empty" << endl;
 	}
-	void clear()
+	void clear()//clears stack
 	{
 		if (!isEmpty())
 			top = -1;
 		else
 			cout << "Stack already empty" << endl;
 	}
-	void Push(int inp)
+	void Push(int inp)//pushes the parameter into the stack
 	{
 		
 			if (!isFull())
@@ -93,11 +94,13 @@ public:
 		 	current[++top] = inp;
 	 }
 	}
-	int peak_ret()
+	int peak_ret()//returns the top variable without popping it. 
+	//used for peaking at the stack at
 	{
 		return current[top];
 	}
-	int precedence(char ch) {
+	int precedence(char ch) {//checks the presedence of the operator
+	//at the top of the stack
     if(ch == '^')
         return 3;
     else if(ch == '/' || ch=='*')
@@ -110,106 +113,179 @@ public:
 
 };
 
-int  main()
+int  main()//main function
 {
-	DAStack stack;
+	DAStack stack;//stack for finding validity of
+	//infix statement and used to fill postfix string
+	DAStack Eva;//stack used for the evaluation of postfix string
+	//
+	//	IT IS IMPORTANT TO USE * WHEN MULTIPLYING, EVEN WHEN PARENTHESES ARE INVOLVED
+	//	E.G To write 9+2(3-1), write 9+2*(3-1) instead, as the program doesn't multiply 
+	// 	when there are only parentheses involved
+	cout<<"If you wish to multiply with a parenthesis, insert * between parenthesis and the outer number"<<endl;
 	int i=0;
-	string s;
-	string postfix;
-	char st;
-	int val;
-	char temp;
-	bool validity=true;
+	string s;//Initial string for input
+	string postfix;//postfix string used to store postfix after conversion
+	char st;//a single char used to store the ith/jth character of either postfix or string s
+	int val;//used for input of value to stack in int
+	// which will store ASCII value
+	bool validity=true;//boolean for checking validity of infix string
 	cout<<"Enter the input"<<endl;
 	getline(cin,s);
 
-	while(s[i]!='\0')
+	//TASK 2 CHECKING FOR VALIDITY
+
+	while(s[i]!='\0')//while not end of string
 	{
-		if(s[i] =='(' || s[i]== '['||s[i]=='{')
-        {    
+		if(s[i] =='(' || s[i]== '['||s[i]=='{')//check if current character is open bracket
+        {    //if it is open bracket, push its ascii value to stack
 			val = (int)s[i];
             stack.Push(val);
         }
-        else if(s[i]==')'||s[i]==']'||s[i]=='}')       
+        else if(s[i]==')'||s[i]==']'||s[i]=='}')//if it is closing bracket instead    
         {
 
-			if(stack.isEmpty())
+			if(stack.isEmpty())//if stack is already empty, the infix string is 
+			//not valid
 			{
             validity= false;
 			}
-			st = (char)stack.pop();
-			if(s[i]==')'&& st=='(')
+			st = (char)stack.pop();//pop top most character and store in st either way
+			if(s[i]==')'&& st=='(')//if st has open bracket of same type in s[i] then valid
 			validity= true;
-			else if(s[i]=='}'&& st=='{')
+			else if(s[i]=='}'&& st=='{')//if st has open bracket of same type in s[i] then valid
 			{
 			validity = true;
 
 			}
-			else if(s[i]==']'&& st=='[')
+			else if(s[i]==']'&& st=='[')//if st has open bracket of same type in s[i] then valid
 			validity= true;
         }
 		i++;
 	}
-	stack.clear();
-	if(validity==true)
+	stack.clear();//clear stack of any values for reuse
+	if(validity==true)//only if the infix string is valid should we proceed.
 	{
 		cout<<"Is valid"<<endl;
-		string postfix;
-		int j=0;
+		
+		//TASK 3 CONVERTING TO POSTFIX
+
+		string postfix;//string for storing postfix value
+		int j=0;//counter for the following loop
 		do
 		{
-			st=s[j];
-			if(st>='0'&&st<='9')
+			st=s[j];//put jth value in st for comparison later on
+			if(st>='0'&&st<='9')//if value is an int, append it into postfix string
 			{
 				postfix+=st;
 			}
-			else if(st=='('||st=='['||st=='{')
-			{
+			else if(st=='('||st=='['||st=='{')//if value is an open bracket
+			{//create space in postfix and push open bracket to stack
 				postfix+=' ';
 				stack.Push((int)st);
 			}
-			else if(st==')'||st=='['||st=='{' )
-			{	postfix+=' ';
-				while(true)
-				{
-					postfix+=(char)stack.peak_ret();
+			else if(st==')'||st==']'||st=='}' )//if closing bracket 
+			{	postfix+=' ';//create space in postfix
+				while(!stack.isEmpty())//keep looping till stack is empty
+				{// unless an opening parentheses is encountered after popping
+					if((char)stack.peak_ret()=='('||(char)stack.peak_ret()=='['||(char)stack.peak_ret()=='{')
+					{//if character is an open bracket, pop without appending postfix string
 					stack.pop();
-					if((char)stack.peak_ret()=='(')
-					{
-					stack.pop();
-					break;
+					break;//break if an opening bracket is encountered
 					} 
-				stack.pop();
-				}
-			}
-			else if(stack.isEmpty()||stack.precedence(st)>stack.precedence((char)stack.peak_ret()))
-			{	cout<<"Hello"<<endl;
-				postfix+=' ';
-				stack.Push((int)st);
-			}
-			else {
-				postfix+=' ';
-				cout<<"H";
-				char d=(char)stack.peak_ret();
-				while(!stack.isEmpty())
-				{
-					cout<<"f"<<endl;
+					else //else, keep appending postfix string from stack.
+					{
 					postfix+=(char)stack.peak_ret();
 					stack.pop();
-
+					}
 				}
+			}
+			
+			else if(stack.isEmpty()||stack.precedence(st)>stack.precedence((char)stack.peak_ret()))
+			{//if stack is either empty or precedence of operator is greater than operator at top
+				// of stack, then create space and push current operator
+				postfix+=' ';
+				
+				stack.Push((int)st);
+			}
+			else if(stack.precedence(st)<=stack.precedence((char)stack.peak_ret()))
+				{//if precedence is lower or equal, keep popping, unless a closing bracket is encountered
+					//or stack is empty
+					while(stack.peak_ret()!='(')
+					{
+						postfix+=(char)stack.pop();
+						if(stack.isEmpty())//break if stack is empty
+						break;
+					}
+					stack.Push((int)st);//push the current operator to stack after popping				
+				}	
+			else 
+				{// if next few characters are not numbers then keep popping stack for 
+					postfix+=' ';
+					while(!stack.isEmpty())
+					{
+						postfix+=(char)stack.peak_ret();
+						stack.pop();
+
+					}
 				}
 				j++;
-				
-
-			
 		}while(j!=s.length()+1);
+			
+			cout<<postfix<<endl;
+			//print postfix expression
+
+
+			//TASK 4 EVALUATION OF POSTFIX EXPRESSION
+
+		// Scan all characters one by one
+		for (i = 0; postfix[i]; ++i)
+		{
+			// If the scanned character is an operand (number here),
+			// push it to the stack.
+		
 	
-		cout<<postfix<<endl;
-	
+			if(postfix[i]==' ')// if the character is an empty space,
+			//continue
+			continue;
+
+			else if (postfix[i]>='0' &&postfix[i]<='9')
+			{
+				int num=0;
+				
+				//extract full number
+				while(postfix[i]>='0' &&postfix[i]<='9')
+				{
+				num = num * 10 + (int)(postfix[i] - '0');
+					i++;
+				}
+				i--;
+				
+				//push the element in the stack
+				Eva.Push(num);
+			}
+			// If the scanned character is an operator, pop two
+			// elements from stack apply the operator
+			else
+			{
+				int val1 = Eva.pop();
+				int val2 = Eva.pop();
+				switch (postfix[i])
+				{
+				case '+': Eva.Push(val2 + val1); break;
+				case '-': Eva.Push(val2 - val1); break;
+				case '*': Eva.Push(val2 * val1); break;
+				case '/': Eva.Push(val2 / val1); break;
+				case '^': Eva.Push(pow(val2,val1)); break;
+				}
+			}
+		}
+		cout<<Eva.pop()<<endl;//after the termination of the while loop, print the resultant 
+		// of the evaluation operation. 
+
 	}
-
-
+	else
+	cout<<"Invalid Infix string"<<endl;
 }
 
 
