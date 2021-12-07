@@ -125,3 +125,17 @@ int main(void)
 	Q1.Enqueue(7);
 
 }
+
+
+
+
+
+if(currentNode!=NULL){
+
+        printOnlyLeaf(currentNode->lChild);
+        printOnlyLeaf(currentNode->rChild);
+        
+        if(currentNode->rChild == NULL && currentNode->lChild == NULL)
+        cout << currentNode->data << " ";
+
+    }
