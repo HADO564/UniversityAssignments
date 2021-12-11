@@ -122,5 +122,10 @@ int main()
     b.insert(4);
     b.insert(0);
     b.preorder(b.root);
+    cout<<"Inorder"<<endl;
+    b.inorder(b.root);
+    cout<<"PostOrder"<<endl;
+    b.postorder(b.root);
+    
     
 }
