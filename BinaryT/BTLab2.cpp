@@ -311,7 +311,6 @@ public:
 		b.postorder(b.root);
 		cout << "Values in inorder" << endl;
 		b.inorder(b.root);
-
 		cout << "Lowest value is " << endl;
 		b.printsmall(b.root);
 		cout << "Largest value is " << endl;
@@ -327,13 +326,13 @@ public:
 		cout << b.maxH(b.root) << endl;
 		cout << "Max Depth of the tree is " << endl;
 		cout << b.maxH(b.root) << endl;
-		//b.destroyT(b.root);
+		b.destroyT(b.root);
 		b.preorder(b.root);
 		int x;
 		cin >> x;
 		b.counteach(b.root);
-		//b.deleteleaf(b.root);
-		//b.inorder(b.root);
+		b.deleteleaf(b.root);
+		b.inorder(b.root);
 		b.deleteleftsub(b.root, NULL);
 		b.inorder(b.root);
 	}
